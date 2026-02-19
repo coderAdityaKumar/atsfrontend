@@ -1,27 +1,21 @@
 import React from "react";
 
-function JobCards({ role, location ,onApply}) {
-
-  function handleApplyNow(id){
-
-  }
+function JobCards({ role,minExperienceInYears,maxExperienceInYears, jobLocationCity, postedOnDate ,onApply}) {
+  const skills=["Javascript","React","Nodejs"];
+  console.log(jobLocationCity);
   return (
-    <div
-      className="flex flex-col sm:flex-row justify-between items-center 
-                    bg-white shadow-md rounded-lg p-4 mb-4 
-                    hover:shadow-lg transition-shadow duration-300"
-    >
-      <div className="flex flex-col items-start">
-        <h3 className="font-semibold text-lg text-gray-800">{role}</h3>
-        <span className="text-gray-500 mt-1 text-center">📍 {location}</span>
+    <div className="mx-1 md:mx-5 mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-zinc-100 rounded-md border border-black shadow-lg hover:border-blue-500 gap-4">
+        <div className="flex flex-col items-start gap-3 ">
+          <h1 className="text-lg font-semibold">{role}</h1>
+          <p>Full Time · {minExperienceInYears}-{maxExperienceInYears} YOE · {jobLocationCity}</p>
+          
+        </div>
+        <div className="flex flex-col items-center gap-4 md:flex-row">
+            <p className="text-gray-500">Posted on : {postedOnDate}</p>
+            <button onClick={onApply} className="text-blue-500 border border-blue-500 px-10 py-2 rounded-md hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out text-sm font-semibold">Apply</button>
+        </div>
       </div>
-      <button
-        className="mt-3 sm:mt-0 px-4 py-2 text-sm font-medium 
-                         text-white bg-blue-600 rounded-full 
-                         hover:bg-blue-700 transition-colors duration-300"
-      onClick={onApply}>
-        Apply Now
-      </button>
     </div>
   );
 }

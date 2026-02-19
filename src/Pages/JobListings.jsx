@@ -2,15 +2,17 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import JobCards from '../components/JobCards';
 import { useNavigate, useParams } from 'react-router-dom';
+import Header from '../components/Header';
 
 function JobListings() {
-  const {careerPageUrl}=useParams();
+  const { careerPageUrl } = useParams();
   const [loading, setLoading] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [company, setCompany] = useState(null);
   const [searchTitle, setSearchTitle] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const isIFrameEnabled=false;
 
   const fetchJobs = async (title = '', location = '') => {
     setLoading(true);
@@ -21,7 +23,7 @@ function JobListings() {
           page: 0,
           pagesize: 10,
           ...(title !== '' && { jobTitle: title }),
-          ...(location !== '' && { location: location }),
+          ...(location !== '' && { jobLocationCity: location }),
         },
       });
       setJobs(response.data.jobs);
@@ -32,6 +34,7 @@ function JobListings() {
         // isIFrameEnabled: response.data.isIFrameEnabled,
         // careerPageUrl: response.data.careerPageUrl,
       });
+      console.log(response);
     } catch (error) {
       console.error('Error fetching jobs', error);
     } finally {
@@ -48,31 +51,14 @@ function JobListings() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <div className="">
       {/* Company Info */}
-      {company && !company.isIFrameEnabled && (
-        <div className="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-6 bg-gray-50 p-4 rounded-lg shadow-md">
-          <img
-            src={company.logo}
-            alt="Company Logo"
-            className="h-16 w-16 object-contain mb-4 sm:mb-0"
-          />
-          <div className="text-center sm:text-left">
-            <h2 className="text-2xl font-bold text-gray-800">{company.companyName}</h2>
-            <a
-              href={company.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline mt-2 block"
-            >
-              Back to Website
-            </a>
-          </div>
-        </div>
+      {!isIFrameEnabled && (
+        <Header />
       )}
 
       {/* Search Filters */}
-      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
+      <div className="max-w-6xl  mx-auto flex flex-col sm:flex-row sm:space-x-4 px-4 space-y-3 sm:space-y-0">
         <input
           type="text"
           placeholder="Search by Job Title"
@@ -89,7 +75,7 @@ function JobListings() {
         />
         <button
           onClick={() => fetchJobs(searchTitle, searchLocation)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md transition"
+          className="hover:bg-blue-500 border border-blue-500 text-blue-500 hover:text-white px-6 py-2 rounded-lg shadow-md transition duration-300 ease-in-out text-sm font-semibold"
         >
           Search
         </button>
@@ -99,12 +85,18 @@ function JobListings() {
       {loading ? (
         <p className="text-center text-gray-600">Loading jobs...</p>
       ) : jobs.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="max-w-6xl  mx-auto ">
           {jobs.map((job) => (
-            <div key={job.jobId} className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition">
+            <div
+              key={job.jobId}
+              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition px-4"
+            >
               <JobCards
                 role={job.jobCategory}
-                location={job.location}
+                minExperienceInYears={job.minExperienceInYears}
+                maxExperienceInYears={job.maxExperienceInYears}
+                jobLocationCity={job.jobLocationCity}
+                postedOnDate={job.postedOnDate}
                 onApply={() => handleApply(job.jobId)}
               />
             </div>
